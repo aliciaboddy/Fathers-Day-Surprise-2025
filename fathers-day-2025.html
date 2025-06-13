@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Father's Day Gift Reveal Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .game-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+        }
+
+        .game-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Wordle Styles */
+        .wordle-grid {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 8px;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        .wordle-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .wordle-cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #d3d6da;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wordle-cell.filled {
+            border-color: #878a8c;
+            background: #f0f0f0;
+        }
+
+        .wordle-cell.correct {
+            background: #6aaa64;
+            color: white;
+            border-color: #6aaa64;
+        }
+
+        .wordle-cell.present {
+            background: #c9b458;
+            color: white;
+            border-color: #c9b458;
+        }
+
+        .wordle-cell.absent {
+            background: #787c7e;
+            color: white;
+            border-color: #787c7e;
+        }
+
+        /* Connections Styles */
+        .connections-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .connections-word {
+            background: #f0f0f0;
+            border: 2px solid #d3d6da;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .connections-word:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .connections-word.selected {
+            background: #878a8c;
+            color: white;
+            border-color: #878a8c;
+        }
+
+        .connections-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .connections-group.yellow {
+            background: #f9df74;
+            color: #333;
+        }
+
+        .connections-group.green {
+            background: #a0c35a;
+            color: white;
+        }
+
+        .connections-group.blue {
+            background: #b0c4ef;
+            color: #333;
+        }
+
+        .connections-group.purple {
+            background: #ba81c5;
+            color: white;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .word-input {
+            font-size: 1.2em;
+            padding: 10px 15px;
+            border: 2px solid #d3d6da;
+            border-radius: 8px;
+            text-transform: uppercase;
+            text-align: center;
+            width: 200px;
+            margin-right: 10px;
+        }
+
+        .submit-btn, .guess-btn, .reveal-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover, .guess-btn:hover, .reveal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .message {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #99d3ff;
+        }
+
+        .gift-reveal {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            display: none;
+        }
+
+        .gift-reveal.show {
+            display: block;
+            animation: giftReveal 1s ease-out;
+        }
+
+        @keyframes giftReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .gift-reveal h2 {
+            color: #d4af37;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .gift-reveal p {
+            font-size: 1.3em;
+            color: #b8860b;
+            line-height: 1.6;
+        }
+
+        .hint {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-style: italic;
+            color: #856404;
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Father's Day Mystery Games 🎬</h1>
+            <p>Solve these puzzles to discover your special gifts!</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Wordle Game -->
+        <div class="game-section" id="wordleSection">
+            <div class="game-title">🎯 Movie Wordle Challenge</div>
+            <div class="hint">Hint: A classic 80s character who knew how to take a day off... (6 letters)</div>
+            
+            <div class="wordle-grid" id="wordleGrid"></div>
+            
+            <div class="input-container">
+                <input type="text" id="wordleInput" class="word-input" maxlength="6" placeholder="GUESS">
+                <button onclick="submitWordle()" class="submit-btn">Submit</button>
+            </div>
+            
+            <div id="wordleMessage" class="message" style="display: none;"></div>
+            <button onclick="revealWordle()" class="reveal-btn" style="margin-top: 10px;">Need a hint? Click here</button>
+        </div>
+
+        <!-- Connections Game -->
+        <div class="game-section" id="connectionsSection" style="display: none;">
+            <div class="game-title">🔗 Academy Museum Connections</div>
+            <div class="hint">Group these 16 words into 4 categories of 4. One category reveals your museum experience!</div>
+            
+            <div id="connectionsGrid" class="connections-grid"></div>
+            <div id="foundGroups"></div>
+            
+            <div class="input-container">
+                <button onclick="submitConnections()" class="guess-btn" id="connectionsSubmit">Submit Group (Select 4)</button>
+                <button onclick="revealConnections()" class="reveal-btn" style="margin-left: 10px;">Need help?</button>
+            </div>
+            
+            <div id="connectionsMessage" class="message" style="display: none;"></div>
+        </div>
+
+        <!-- Gift Reveal -->
+        <div class="gift-reveal" id="giftReveal">
+            <h2>🎉 Congratulations! 🎉</h2>
+            <p><strong>Your Father's Day Gifts Revealed:</strong></p>
+            <p>🎬 <strong>Academy Museum tickets at 10am</strong><br>
+               featuring the "Cyberpunk: Envisioning Possible Futures Through Cinema" exhibit</p>
+            <p>🍿 <strong>2:30pm screening of "Ferris Bueller's Day Off"</strong><br>
+               in the museum's theater</p>
+            <p>🍽️ <strong>Dinner at a special restaurant</strong><br>
+               to celebrate our last week in LA together!</p>
+            <p style="margin-top: 20px; font-size: 1.1em;">
+                <em>Happy Father's Day! Let's make this day off as memorable as Ferris would! 💙</em>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Wordle Game Logic
+        const TARGET_WORD = "FERRIS";
+        let wordleAttempts = 0;
+        let wordleComplete = false;
+        let selectedWords = [];
+
+        // Connections words and groups
+        const CONNECTIONS_WORDS = [
+            // BLADE RUNNER CHARACTERS (Purple - Hardest)
+            "DECKARD", "BATTY", "RACHEL", "PRIS",
+            // CYBERPUNK TECH (Blue)
+            "ANDROID", "CYBER", "MATRIX", "NEURAL",
+            // MUSEUM WORDS (Green - Your experience!)
+            "EXHIBIT", "TICKETS", "THEATER", "ACADEMY",
+            // 80S MOVIES (Yellow - Easiest)
+            "BUELLER", "TOPGUN", "KARATE", "SIXTEEN"
+        ];
+
+        const CONNECTIONS_GROUPS = [
+            {
+                words: ["DECKARD", "BATTY", "RACHEL", "PRIS"],
+                category: "BLADE RUNNER CHARACTERS",
+                color: "purple",
+                difficulty: 4
+            },
+            {
+                words: ["ANDROID", "CYBER", "MATRIX", "NEURAL"],
+                category: "CYBERPUNK TECHNOLOGY",
+                color: "blue",
+                difficulty: 3
+            },
+            {
+                words: ["EXHIBIT", "TICKETS", "THEATER", "ACADEMY"],
+                category: "YOUR MUSEUM EXPERIENCE",
+                color: "green",
+                difficulty: 2
+            },
+            {
+                words: ["BUELLER", "TOPGUN", "KARATE", "SIXTEEN"],
+                category: "80S MOVIE TITLES (MISSING WORDS)",
+                color: "yellow",
+                difficulty: 1
+            }
+        ];
+
+        let connectionsWords = [...CONNECTIONS_WORDS];
+        let foundGroups = [];
+        let connectionsComplete = false;
+
+        // Initialize Wordle Grid
+        function initWordle() {
+            const grid = document.getElementById('wordleGrid');
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('div');
+                row.className = 'wordle-row';
+                for (let j = 0; j < 6; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'wordle-cell';
+                    cell.id = `cell-${i}-${j}`;
+                    row.appendChild(cell);
+                }
+                grid.appendChild(row);
+            }
+        }
+
+        // Initialize Connections Grid
+        function initConnections() {
+            const grid = document.getElementById('connectionsGrid');
+            shuffleArray(connectionsWords);
+            
+            connectionsWords.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'connections-word';
+                wordElement.textContent = word;
+                wordElement.onclick = () => toggleWord(wordElement);
+                grid.appendChild(wordElement);
+            });
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Wordle submit function
+        function submitWordle() {
+            const input = document.getElementById('wordleInput');
+            const guess = input.value.toUpperCase();
+            
+            if (guess.length !== 6) {
+                showMessage('wordleMessage', 'Please enter a 6-letter word!', 'error');
+                return;
+            }
+
+            if (wordleAttempts >= 6) {
+                showMessage('wordleMessage', 'No more attempts!', 'error');
+                return;
+            }
+
+            // Fill the grid
+            for (let i = 0; i < 6; i++) {
+                const cell = document.getElementById(`cell-${wordleAttempts}-${i}`);
+                cell.textContent = guess[i];
+                cell.classList.add('filled');
+                
+                if (guess[i] === TARGET_WORD[i]) {
+                    cell.classList.add('correct');
+                } else if (TARGET_WORD.includes(guess[i])) {
+                    cell.classList.add('present');
+                } else {
+                    cell.classList.add('absent');
+                }
+            }
+
+            wordleAttempts++;
+            input.value = '';
+
+            if (guess === TARGET_WORD) {
+                showMessage('wordleMessage', '🎉 Correct! You found FERRIS!', 'success');
+                wordleComplete = true;
+                updateProgress();
+                setTimeout(() => {
+                    document.getElementById('connectionsSection').style.display = 'block';
+                    document.getElementById('connectionsSection').scrollIntoView({ behavior: 'smooth' });
+                }, 2000);
+            } else if (wordleAttempts >= 6) {
+                showMessage('wordleMessage', `Game over! The word was ${TARGET_WORD}`, 'error');
+                wordleComplete = true;
+                updateProgress();
+                setTimeout(() => {
+                    document.getElementById('connectionsSection').style.display = 'block';
+                }, 2000);
+            } else {
+                showMessage('wordleMessage', `Attempt ${wordleAttempts}/6. Keep trying!`, 'info');
+            }
+        }
+
+        // Connections functions
+        function toggleWord(element) {
+            if (foundGroups.some(group => group.words.includes(element.textContent))) {
+                return; // Word already in a found group
+            }
+
+            element.classList.toggle('selected');
+            
+            const selectedElements = document.querySelectorAll('.connections-word.selected');
+            if (selectedElements.length > 4) {
+                element.classList.remove('selected');
+            }
+            
+            selectedWords = Array.from(selectedElements).map(el => el.textContent);
+            
+            const submitBtn = document.getElementById('connectionsSubmit');
+            submitBtn.textContent = `Submit Group (${selectedWords.length}/4)`;
+        }
+
+        function submitConnections() {
+            if (selectedWords.length !== 4) {
+                showMessage('connectionsMessage', 'Please select exactly 4 words!', 'error');
+                return;
+            }
+
+            // Check if this is a valid group
+            const matchedGroup = CONNECTIONS_GROUPS.find(group => 
+                group.words.every(word => selectedWords.includes(word)) &&
+                selectedWords.every(word => group.words.includes(word))
+            );
+
+            if (matchedGroup) {
+                // Correct group found
+                foundGroups.push(matchedGroup);
+                showMessage('connectionsMessage', `✅ Correct! "${matchedGroup.category}"`, 'success');
+                
+                // Remove found words and create group display
+                const foundGroupsContainer = document.getElementById('foundGroups');
+                const groupDiv = document.createElement('div');
+                groupDiv.className = `connections-group ${matchedGroup.color}`;
+                groupDiv.innerHTML = `
+                    <div style="grid-column: 1/-1; margin-bottom: 10px; font-size: 0.9em;">
+                        ${matchedGroup.category}
+                    </div>
+                    ${matchedGroup.words.map(word => `<div>${word}</div>`).join('')}
+                `;
+                foundGroupsContainer.appendChild(groupDiv);
+
+                // Remove found words from grid
+                selectedWords.forEach(word => {
+                    const wordElement = document.querySelector(`.connections-word:not(.found)[textContent="${word}"]`);
+                    if (wordElement) {
+                        wordElement.style.display = 'none';
+                    }
+                });
+
+                // Clear selection
+                document.querySelectorAll('.connections-word.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                selectedWords = [];
+                document.getElementById('connectionsSubmit').textContent = 'Submit Group (0/4)';
+
+                if (foundGroups.length === 4) {
+                    connectionsComplete = true;
+                    updateProgress();
+                    setTimeout(() => {
+                        document.getElementById('giftReveal').classList.add('show');
+                        document.getElementById('giftReveal').scrollIntoView({ behavior: 'smooth' });
+                    }, 1500);
+                }
+            } else {
+                showMessage('connectionsMessage', '❌ Not a group. Try again!', 'error');
+                // Clear selection
+                document.querySelectorAll('.connections-word.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                selectedWords = [];
+                document.getElementById('connectionsSubmit').textContent = 'Submit Group (0/4)';
+            }
+        }
+
+        function revealWordle() {
+            showMessage('wordleMessage', `💡 Hint: Think about the main character's first name from your 2:30pm movie!`, 'info');
+        }
+
+        function revealConnections() {
+            const remainingGroups = CONNECTIONS_GROUPS.filter(group => 
+                !foundGroups.some(found => found.category === group.category)
+            );
+            
+            if (remainingGroups.length > 0) {
+                const easiestGroup = remainingGroups.reduce((prev, current) => 
+                    prev.difficulty < current.difficulty ? prev : current
+                );
+                showMessage('connectionsMessage', 
+                    `💡 Hint: Look for "${easiestGroup.category}" - ${easiestGroup.words.slice(0, 2).join(', ')}...`, 'info');
+            }
+        }
+
+        function showMessage(elementId, message, type) {
+            const messageEl = document.getElementById(elementId);
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+        }
+
+        function updateProgress() {
+            let progress = 0;
+            if (wordleComplete) progress += 50;
+            if (connectionsComplete) progress += 50;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Allow Enter key for Wordle
+        document.getElementById('wordleInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitWordle();
+            }
+        });
+
+        // Initialize games
+        initWordle();
+        initConnections();
+    </script>
+</body>
+</html>
